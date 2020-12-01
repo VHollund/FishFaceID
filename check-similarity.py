@@ -15,8 +15,8 @@ if len(sys.argv) != 3:
 file1 = sys.argv[1]
 file2 = sys.argv[2]
 
-img1 = Image.open("fish2_1.jpg").convert("L")
-img2 = Image.open("fish1.jpg").convert("L")
+img1 = Image.open(file1).convert("L")
+img2 = Image.open(file2).convert("L")
 
 transformation = main.transformation()
 
@@ -32,7 +32,6 @@ model.eval()
 
 output1, output2 = model(Variable(img1), Variable(img2))
 
-#print(F.pairwise_distance(output1, output2).item())
 
 euclidean_distance = F.pairwise_distance(output1, output2)
 

@@ -93,8 +93,8 @@ class SiameseNetworkDataset(Dataset):
 
         # see if rewrite of last parameter is possible
         # Use of last parameter is label when training
-        labels = np.array([int(img1_tuple[1] != img0_tuple[1])], dtype=np.float32)
-        return img0, img1, torch.from_numpy(labels)
+        label = np.array([int(img1_tuple[1] != img0_tuple[1])], dtype=np.float32)
+        return img0, img1, torch.from_numpy(label)
 
     def __len__(self):
         return len(self.imageFolderDataset.imgs)

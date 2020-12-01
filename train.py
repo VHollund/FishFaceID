@@ -2,9 +2,12 @@ import torchvision.datasets as dset
 
 import torchvision.transforms as transforms
 from torchvision.transforms import transforms
+from torch.autograd import Variable
+import torchvision
+import torch.nn.functional as F
 
 import torch
-from SiameseNetwork.main import Config, SiameseNetwork, SiameseNetworkDataset, DataLoader, ContrastiveLoss
+from SiameseNetwork.main import Config, SiameseNetwork, SiameseNetworkDataset, DataLoader, ContrastiveLoss, imshow
 
 
 # Loads images from data folder
@@ -42,7 +45,7 @@ iteration_number= 0
 #TODO: Save model to disk
 
 #for epoch in range(Config.train_number_epochs):
-for epoch in range(1):
+for epoch in range(20):
     for i, data in enumerate(train_dataloader, 0):
         img0, img1, label = data
         # TODO: Figure out what this does
@@ -63,7 +66,6 @@ for epoch in range(1):
 
 torch.save(net.state_dict(), "model.pt")
 
-"""
 test_dataloader = DataLoader(siamese_dataset,num_workers=6,batch_size=1,shuffle=True)
 dataiter = iter(test_dataloader)
 x0,_,_ = next(dataiter)
@@ -77,4 +79,3 @@ for i in range(10):
     output1,output2 = net(Variable(x0),Variable(x1))
     euclidean_distance = F.pairwise_distance(output1, output2)
     imshow(torchvision.utils.make_grid(concatenated),'Dissimilarity: {:.2f}'.format(euclidean_distance.item()))
-"""
