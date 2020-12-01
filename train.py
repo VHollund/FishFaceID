@@ -45,7 +45,7 @@ iteration_number= 0
 #TODO: Save model to disk
 
 #for epoch in range(Config.train_number_epochs):
-for epoch in range(20):
+for epoch in range(100):
     for i, data in enumerate(train_dataloader, 0):
         img0, img1, label = data
         # TODO: Figure out what this does
@@ -64,13 +64,13 @@ for epoch in range(20):
             loss_history.append(loss_contrastive.item())
 
 
-torch.save(net.state_dict(), "model.pt")
+torch.save(net.state_dict(), "BodyR100.pt")
 
 test_dataloader = DataLoader(siamese_dataset,num_workers=6,batch_size=1,shuffle=True)
 dataiter = iter(test_dataloader)
 x0,_,_ = next(dataiter)
-print(x0.size())
-print(siamese_dataset.__getitem__(0)[0].size())
+#print(x0.size())
+#print(siamese_dataset.__getitem__(0)[0].size())
 
 for i in range(10):
     _,x1,label2 = next(dataiter)
