@@ -1,20 +1,15 @@
 import random
 
-import torchvision
-
-import torchvision.datasets as dset
 from torchvision.datasets import ImageFolder
 
 import torchvision.transforms as transforms
 from torchvision.transforms import transforms
 
 import torch
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
 
 import torch.nn as nn
 import torch.nn.functional as F
-
-from torch.autograd import Variable
 
 from matplotlib import pyplot as plt
 
@@ -25,7 +20,7 @@ import numpy as np
 
 class Config():
     # Change part to test different parts of fish
-    part = "headL"
+    part = "headR"
     training_dir = "./data2/"+part+"/training/"
     testing_dir = "./data2/"+part+"/testing/"
     train_batch_size = 64
@@ -53,7 +48,6 @@ def show_plot(iteration,loss):
 
 
 # Dataset class
-# This dataset generates a pair of images. 0 for geniune pair and 1 for imposter pair
 class SiameseNetworkDataset(Dataset):
 
     def __init__(self,
@@ -91,9 +85,9 @@ class SiameseNetworkDataset(Dataset):
             img0 = self.transform(img0)
             img1 = self.transform(img1)
 
-        # see if rewrite of last parameter is possible
         # Use of last parameter is label when training
         label = np.array([int(img1_tuple[1] != img0_tuple[1])], dtype=np.float32)
+        # Returns pair of images, and whether they are from the same fish or not
         return img0, img1, torch.from_numpy(label)
 
     def __len__(self):
@@ -125,7 +119,6 @@ class SiameseNetwork(nn.Module):
         )
 
         self.fc1 = nn.Sequential(
-            # TODO: Linear transform, figure out why
             nn.Linear(8*Config.image_size*Config.image_size, 500),
             nn.ReLU(inplace=True),
 
@@ -137,7 +130,6 @@ class SiameseNetwork(nn.Module):
 
     def forward_once(self, x):
         output = self.cnn1(x)
-        # TODO: Figure out what this is
         output = output.view(output.size()[0], -1)
         output = self.fc1(output)
         return output
@@ -149,14 +141,13 @@ class SiameseNetwork(nn.Module):
 
 class ContrastiveLoss(nn.Module):
     def __init__(self, margin=2.0):
-        # TODO: Find out what margin is
         super(ContrastiveLoss, self).__init__()
         self.margin = margin
 
     def forward(self, output1, output2, label):
-        # TODO: Find out what this is
         euclidean_distance = F.pairwise_distance(output1, output2, keepdim = True)
-        # TODO: Figure out this formula
+        # Contrastive loss function from hackernoon article
+        # Uses euclidian distance to calculate difference between outputs
         loss_contrastive = torch.mean((1-label) * torch.pow(euclidean_distance, 2) +
                                       (label) * torch.pow(torch.clamp(self.margin - euclidean_distance, min=0.0), 2))
 

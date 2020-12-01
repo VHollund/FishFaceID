@@ -9,11 +9,12 @@ import torch
 from SiameseNetwork import main
 import torch.nn.functional as F
 
+# Load model from file and set net to eval mode
 model = main.SiameseNetwork()
-model.load_state_dict(torch.load("model.pt"))
+model.load_state_dict(torch.load("modelHR.pt"))
 model.eval()
 
-folder_dataset = dset.ImageFolder(root=main.Config.training_dir)
+folder_dataset = dset.ImageFolder(root=main.Config.testing_dir)
 
 siamese_dataset = main.SiameseNetworkDataset(
     imageFolderDataset=folder_dataset,
@@ -22,7 +23,6 @@ siamese_dataset = main.SiameseNetworkDataset(
 
 test_dataloader = main.DataLoader(siamese_dataset,num_workers=6,batch_size=1,shuffle=True)
 dataiter = iter(test_dataloader)
-#x0,_,label1 = next(dataiter)
 
 for i in range(10):
     x0,x1,label = next(dataiter)
