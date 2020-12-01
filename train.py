@@ -2,12 +2,12 @@ import torchvision.datasets as dset
 
 import torchvision.transforms as transforms
 from torchvision.transforms import transforms
-from torch.autograd import Variable
-import torchvision
-import torch.nn.functional as F
 
 import torch
-from SiameseNetwork.main import Config, SiameseNetwork, SiameseNetworkDataset, DataLoader, ContrastiveLoss, imshow
+from SiameseNetwork.main import (
+    Config, SiameseNetwork, SiameseNetworkDataset, DataLoader,
+    ContrastiveLoss
+)
 
 
 # Loads images from data folder
@@ -37,7 +37,7 @@ criterion = ContrastiveLoss()
 optimizer = torch.optim.Adam(net.parameters(), lr=0.0005)
 
 counter = []
-loss_history = [] 
+loss_history = []
 iteration_number = 0
 
 for epoch in range(Config.train_number_epochs):

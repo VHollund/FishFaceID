@@ -20,7 +20,7 @@ import numpy as np
 
 class Config():
     # Change part to test different parts of fish
-    part = "headR"
+    part = "bodyR"
     training_dir = "./data2/"+part+"/training/"
     testing_dir = "./data2/"+part+"/testing/"
     train_batch_size = 64
